@@ -11,7 +11,11 @@ function App() {
   ];
 
   const childNodes = [
-    { data: { id: "three", label: "Node 3" }, position: { x: 200, y: 100 } },
+    {
+      data: { id: "three", label: "This is a very long label for node 3" },
+      position: { x: 200, y: 100 },
+      classes: "multiline-auto",
+    },
     { data: { id: "four", label: "Node 4" }, position: { x: 300, y: 200 } },
     { data: { id: "five", label: "Node 5" }, position: { x: 400, y: 300 } },
   ];
@@ -77,12 +81,20 @@ function App() {
         width: 20,
         height: 20,
         shape: "rectangle",
+        label: "data(label)",
       },
     },
     {
       selector: "edge",
       style: {
         width: 1,
+      },
+    },
+    {
+      selector: ".multiline-auto",
+      style: {
+        "text-wrap": "wrap",
+        "text-max-width": 80,
       },
     },
   ];
