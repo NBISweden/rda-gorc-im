@@ -1,6 +1,13 @@
 import {GORCNode} from "./GROCNodes";
 
-export type QuestionNode = GORCNode & Questions;
+export type QuestionNode = GORCNode & Questions & Position;
+
+type Position = {
+    position: {
+        x: number;
+        y: number;
+    }
+}
 
 type Questions = {
     questions: Question[];
