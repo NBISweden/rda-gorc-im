@@ -1,34 +1,30 @@
-export type GORCNode = EssentialElement | Category | Subcategory | Attribute | Feature;
+export type GORCTree<T extends GORCNode | QuestionNode> = {
+    node: T,
+    children: GORCTree<T>[]
+}
 
-export type EssentialElement = IdentifiableEntity & Attributes & {
-    type: "essential-element",
-    categories: Category[];
+export type GORCNode = IdentifiableEntity & {
+    type: (
+        "essential-element"
+        | "category"
+        | "subcategory"
+        | "attribute"
+        | "feature"
+        | "kpi"
+    );
 };
 
-export type Category = IdentifiableEntity & Attributes & {
-    type: "category",
-    subcategories: Subcategory;
-};
-
-export type Subcategory = IdentifiableEntity & Attributes & {
-    type: "subcategory",
-};
-
-export type Attribute = IdentifiableEntity & KPIs & {
-    type: "attribute",
-    features: Feature[];
-};
-
-export type Feature = IdentifiableEntity & KPIs & {
-    type: "feature",
-};
-
-export type KPI = IdentifiableEntity & {
-    type: "kpi",
-};
+export type QuestionNode = {
+    type: "question";
+    id: NodeId;
+    parentId: NodeId;
+    label: string;
+    description: string;
+}
 
 type IdentifiableEntity = {
-    id: string;
+    id: NodeId;
+    parentId: NodeId;
     name: {
         shortName: string;
         longName: string;
@@ -40,14 +36,6 @@ type IdentifiableEntity = {
     implementation?: Implementation;
 }
 
-type Attributes = {
-    attributes: Attribute[];
-}
-
-type KPIs = {
-    kpis: KPI[];
-}
-
 type Source = {
     name: string;
     url: string;
@@ -56,3 +44,7 @@ type Source = {
 type ConsiderationLevel = "core" | "desirable" | "optional";
 
 type Implementation = unknown;
+
+export type NodeId = string | null;
+
+export type QuestionId = string;

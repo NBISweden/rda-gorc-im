@@ -1,30 +1,31 @@
-import {GORCNode} from "./GROCNodes";
-import {Question} from "./InteractiveNodes";
+import {GORCNode, NodeId} from "./GROCNodes";
 
-type ModelNode = Omit<GORCNode, "id" | "categories" | "subcategories" | "attributes" | "features"> & Child;
+type ModelNode = Omit<GORCNode, "id">;
 
-export type LayeredModel = {
+export type LayeredModel = Package & {
     nodes: {
-        [id: string]: ModelNode
-    },
-    questions: {
-        [id: string]: QuestionNode
-    }
+        [id: string]: ModelNode;
+    };
 }
 
-export type LayeredModelLayer = {
+export type LayeredModelLayer = Package & {
     nodes: {
-        [id: string]: ModelNode | Nothing
-    },
-    questions: {
-        [id: string]: QuestionNode | Nothing
-    }
+        [id: string]: ModelNode | Nothing;
+    };
 }
 
-type QuestionNode = Omit<Question, "id"> & {type: "question"} & Child;
+export type ThematicSlice = Package & {
+    nodes: {
+        nodeId: NodeId;
+    }[];
+}
+
+type Package = {
+    id: string;
+    label: string;
+    version: SemanticVersionString;
+}
 
 type Nothing = {type: "nothing"}
 
-type Child = {
-    pid: string | null;
-}
+type SemanticVersionString = string;
