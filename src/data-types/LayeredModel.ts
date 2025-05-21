@@ -1,5 +1,5 @@
 import {GORCNode} from "./GROCNodes";
-import {Question} from "./QuestionNodes";
+import {Question} from "./InteractiveNodes";
 
 type ModelNode = Omit<GORCNode, "id" | "categories" | "subcategories" | "attributes" | "features"> & Child;
 

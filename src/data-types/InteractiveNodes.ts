@@ -1,6 +1,6 @@
 import {GORCNode} from "./GROCNodes";
 
-export type QuestionNode = GORCNode & Questions & Position;
+export type InteractiveNodes = GORCNode & Questions & Position;
 
 type Position = {
     position: {
