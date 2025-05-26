@@ -5,6 +5,8 @@ import {
   XYPosition,
 } from "@xyflow/react";
 import {GORCNode, QuestionNode, NodeId} from "../modules/GORCNodes"
+import hexagonImage from "../img/hexagon.png";
+
 
 export interface TreeManager {
     getNodes(): Node[];
@@ -101,8 +103,9 @@ function nodeFromGORCNode(node: GORCNode, layout: Layout): Node {
   const position = layout[node.id] || { x: Math.random() * 300, y: Math.random() * 300 }
   return {
     id: node.id,
+    type: "shape",
     position: position,
-    data: { label: node.name.longName },
+    data: { label: node.name.longName, type: "round-rectangle", img: hexagonImage},
   }
 }
 
