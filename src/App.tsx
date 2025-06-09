@@ -2,9 +2,8 @@ import React from "react";
 import { Tree } from "./components/Tree.tsx";
 import { TreeContext, createTreeManagerFromModelNodes, getLayout } from "./contexts/TreeContext.ts"
 import { ModelDefinition, getModelNodes, applyLayersAndSlices } from "./modules/LayeredModel.ts"
-import { models as mockModels, profiles as mockProfiles, slices as mockSlices } from "../examples/example-models.ts"
 import { createRepositoryManager } from "./contexts/RepositoryContext.ts"
-import { StaticRepositorySource, HttpRepositorySource } from "./modules/RepositorySource.ts"
+import { HttpRepositorySource } from "./modules/RepositorySource.ts"
 import {
   useModelSelectionManagers,
   RepositorySelectionContext,
@@ -17,10 +16,16 @@ import "./App.css";
 import { SettingsPanel } from "./components/SettingsPanel.tsx";
 import Layout from "./components/Layout/Layout";
 
+type AppConfig = {
+  repositories: {url: string, id: string, name: string}[];
+  title: string;
+}
 
-const AppBase = () => {
+
+const AppBase = (props: {title: string}) => {
   return (
     <Layout
+      title={props.title}
       panels={{
         settings: {
           component: <SettingsPanel />,
@@ -35,19 +40,29 @@ const AppBase = () => {
   )
 }
 
-const App = () => {
-  const repositoryManager = createRepositoryManager([
-    new StaticRepositorySource(
-      {
-        id: "mock-repo",
-        name: "Mock repo"
-      },
-      Object.values(mockModels),
-      Object.values(mockProfiles),
-      Object.values(mockSlices)
-    ),
-    new HttpRepositorySource({url: "http-repo/root.json", id: "http-repo", name: "HTTP Based Repo"})
-  ]);
+export function parseAppConfig(data?: unknown): AppConfig {
+  const defaults: AppConfig = {
+    title: "RDA Visualisation App",
+    repositories: []
+  }
+  if (data && typeof data === "object") {
+    return {
+      title: "title" in data && typeof(data.title) === "string" ? data.title : defaults.title,
+      repositories: (
+        "repositories" in data && Array.isArray(data.repositories)
+          ? data.repositories.map<AppConfig["repositories"][number]>(r => r) 
+          : defaults.repositories
+      )
+    }
+  } else {
+    return defaults
+  }
+}
+
+const App = ({config}: {config: AppConfig}) => {
+  const repositoryManager = createRepositoryManager(
+    config.repositories.map(r =>  new HttpRepositorySource(r))
+  );
   const [
     repoSelection,
     modelSelection,
@@ -73,7 +88,7 @@ const App = () => {
         <ProfileSelectionContext.Provider value={profileSelection}>
           <SliceSelectionContext.Provider value={sliceSelection}>
             <TreeContext.Provider value={treeManager}>
-              <AppBase />
+              <AppBase title={config.title}/>
             </TreeContext.Provider>
           </SliceSelectionContext.Provider>
         </ProfileSelectionContext.Provider>

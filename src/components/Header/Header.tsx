@@ -13,14 +13,15 @@ type PanelButton = {
 };
 
 type HeaderProps = {
+    title: string;
     panelButtons?: PanelButton[];
 };
 
-function Header({ panelButtons = [] }: HeaderProps) {
+function Header({ title, panelButtons = [] }: HeaderProps) {
     const repository = useSelected(RepositorySelectionContext);
     return (
         <header className="header">
-            <div className="header-title">RDA Visualisation App: {repository ? repository.info.name : ""}</div>
+            <div className="header-title">{title}: {repository ? repository.info.name : ""}</div>
             <nav className="header-nav">
                 <ul className="nav-list">
                     <li><NavLink to="/documentation">Documentation</NavLink></li>
