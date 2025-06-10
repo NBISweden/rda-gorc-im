@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router";
 import './Header.css';
+import { useConfig } from "../../contexts/ConfigContext.ts"
 import {
   RepositorySelectionContext,
   useSelected,
@@ -13,11 +14,11 @@ type PanelButton = {
 };
 
 type HeaderProps = {
-    title: string;
     panelButtons?: PanelButton[];
 };
 
-function Header({ title, panelButtons = [] }: HeaderProps) {
+function Header({ panelButtons = [] }: HeaderProps) {
+    const {title} = useConfig()
     const repository = useSelected(RepositorySelectionContext);
     return (
         <header className="header">

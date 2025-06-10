@@ -2,8 +2,9 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router";
 import "./index.css";
-import App, {parseAppConfig} from "./App.tsx";
+import App from "./App.tsx";
 import { Documentation } from "./pages/Documentation.tsx";
+import { parseAppConfig, ConfigContext } from "./contexts/ConfigContext.ts"
 
 
 async function loadApp(url: string) {
@@ -17,12 +18,14 @@ async function loadApp(url: string) {
   document.title = config.title;
   createRoot(document.getElementById("root")!).render(
     <StrictMode>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<App config={config}/>} />
-          <Route path="documentation" element={<Documentation />} />
-        </Routes>
-      </BrowserRouter>
+      <ConfigContext.Provider value={config}>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<App />} />
+            <Route path="documentation" element={<Documentation />} />
+          </Routes>
+        </BrowserRouter>
+      </ConfigContext.Provider>
     </StrictMode>
   );
 

@@ -4,6 +4,7 @@ import { TreeContext, createTreeManagerFromModelNodes, getLayout } from "./conte
 import { ModelDefinition, getModelNodes, applyLayersAndSlices } from "./modules/LayeredModel.ts"
 import { createRepositoryManager } from "./contexts/RepositoryContext.ts"
 import { HttpRepositorySource } from "./modules/RepositorySource.ts"
+import { useConfig } from "./contexts/ConfigContext.ts"
 import {
   useModelSelectionManagers,
   RepositorySelectionContext,
@@ -16,16 +17,10 @@ import "./App.css";
 import { SettingsPanel } from "./components/SettingsPanel.tsx";
 import Layout from "./components/Layout/Layout";
 
-type AppConfig = {
-  repositories: {url: string, id: string, name: string}[];
-  title: string;
-}
 
-
-const AppBase = (props: {title: string}) => {
+const AppBase = () => {
   return (
     <Layout
-      title={props.title}
       panels={{
         settings: {
           component: <SettingsPanel />,
@@ -40,28 +35,10 @@ const AppBase = (props: {title: string}) => {
   )
 }
 
-export function parseAppConfig(data?: unknown): AppConfig {
-  const defaults: AppConfig = {
-    title: "RDA Visualisation App",
-    repositories: []
-  }
-  if (data && typeof data === "object") {
-    return {
-      title: "title" in data && typeof(data.title) === "string" ? data.title : defaults.title,
-      repositories: (
-        "repositories" in data && Array.isArray(data.repositories)
-          ? data.repositories.map<AppConfig["repositories"][number]>(r => r) 
-          : defaults.repositories
-      )
-    }
-  } else {
-    return defaults
-  }
-}
-
-const App = ({config}: {config: AppConfig}) => {
+const App = () => {
+  const {repositories} = useConfig();
   const repositoryManager = createRepositoryManager(
-    config.repositories.map(r =>  new HttpRepositorySource(r))
+    repositories.map(r =>  new HttpRepositorySource(r))
   );
   const [
     repoSelection,
@@ -88,7 +65,7 @@ const App = ({config}: {config: AppConfig}) => {
         <ProfileSelectionContext.Provider value={profileSelection}>
           <SliceSelectionContext.Provider value={sliceSelection}>
             <TreeContext.Provider value={treeManager}>
-              <AppBase title={config.title}/>
+              <AppBase />
             </TreeContext.Provider>
           </SliceSelectionContext.Provider>
         </ProfileSelectionContext.Provider>
