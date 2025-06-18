@@ -10,20 +10,26 @@ type Props = {
 };
 
 export const SidePanel = ({ node, onClose }: Props) => {
-  if (!node) return null;
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
+  const data = node?.data;
 
-  const data = node.data;
+  React.useEffect(() => {
+    setIsOpen(!!data);
+  }, [data]);
 
   return (
-    <PanelWrapper position={"left"}>
+    <PanelWrapper position={"left"} visible={isOpen}>
       <button
         className="side-panel-close"
-        onClick={onClose}
+        onClick={() => {
+          setIsOpen(false);
+          onClose();
+        }}
         aria-label="Close panel"
       >
         ×
       </button>
-      {data ? (
+      {node?.data ? (
         <>
           <h2>{data.shortName}</h2>
           <h3>{data.name}</h3>
