@@ -34,7 +34,8 @@ docker-compose stop
 <!-- ## License
 
 This project is licensed under the [NAME HERE] License - see the LICENSE.md file for details
-
+-->
 ## Acknowledgments
 
-Inspiration, code snippets, etc.-->
+This project has received funding from the European Union’s Horizon Europe research and innovation programme under grant agreement No 101094406
+<!-- Inspiration, code snippets, etc.-->
